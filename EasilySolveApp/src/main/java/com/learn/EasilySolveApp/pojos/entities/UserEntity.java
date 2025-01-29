@@ -26,23 +26,11 @@ public class UserEntity {
     private String lastName;
 
     @NotBlank(message = "Email is required")
-    @Email(message = "Email should be valid")
-    @Column(name = "EMAIL", nullable = false)
+    @Email(regexp = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$", message = "Invalid email format")
+    @Column(name = "EMAIL", nullable = false, unique = true)
     private String email;
 
     @Column(name = "USER_TYPE", nullable = false)
     private String userType;
 
-    @Override
-    public String toString() {
-        return "StudentEntitiy{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", userType='" + userType + '\'' +
-                '}';
-    }
-
-    
 }
