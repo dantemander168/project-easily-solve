@@ -1,6 +1,7 @@
 package com.learn.EasilySolveApp.controllers;
 
 import com.learn.EasilySolveApp.pojos.dto.auth.LoginRequest;
+import com.learn.EasilySolveApp.pojos.dto.auth.UserRegistrationDto;
 import com.learn.EasilySolveApp.pojos.entities.UserEntity;
 import com.learn.EasilySolveApp.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody UserEntity userEntity) {
-        return authService.register(userEntity);
+    public ResponseEntity<?> register(@RequestBody UserRegistrationDto userRegistrationDto) {
+        return authService.register(userRegistrationDto);
     }
 }

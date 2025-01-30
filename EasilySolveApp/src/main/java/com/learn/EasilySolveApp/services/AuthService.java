@@ -4,6 +4,7 @@ import com.learn.EasilySolveApp.constants.ExceptionCodes;
 import com.learn.EasilySolveApp.exceptions.ValidationException;
 import com.learn.EasilySolveApp.pojos.dto.auth.AuthResponse;
 import com.learn.EasilySolveApp.pojos.dto.auth.LoginRequest;
+import com.learn.EasilySolveApp.pojos.dto.auth.UserRegistrationDto;
 import com.learn.EasilySolveApp.pojos.entities.UserEntity;
 import com.learn.EasilySolveApp.repositories.UserRepository;
 import com.learn.EasilySolveApp.utils.JwtUtil;
@@ -46,9 +47,11 @@ public class AuthService {
         }
     }
 
-    public ResponseEntity<?> register(UserEntity userEntity) {
+    public ResponseEntity<?> register(UserRegistrationDto userRegistrationDto) {
         try {
-            validateUserEntity(userEntity);
+            validateUserRegistrationDto(userRegistrationDto);
+
+            UserEntity userEntity = createUserEntity(userRegistrationDto);
 
             userRepository.save(userEntity);
             return ResponseEntity.ok(Map.of("message", "User registered successfully"));
@@ -63,17 +66,26 @@ public class AuthService {
         }
     }
 
+    private UserEntity createUserEntity(UserRegistrationDto userRegistrationDto) {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setFirstName(userRegistrationDto.getFirstName());
+        userEntity.setLastName(userRegistrationDto.getLastName());
+        userEntity.setEmail(userRegistrationDto.getEmail());
+        userEntity.setUserType("STUDENT");
+        return userEntity;
+    }
+
     private void validateLoginRequest(LoginRequest loginRequest) {
         if (loginRequest.getEmail() == null || loginRequest.getEmail().isEmpty()) {
             throw new ValidationException(ExceptionCodes.EMPTY_EMAIL);
         }
     }
 
-    private void validateUserEntity(UserEntity userEntity) {
-        if (userEntity.getEmail() == null || userEntity.getEmail().isEmpty()) {
+    private void validateUserRegistrationDto(UserRegistrationDto userRegistrationDto) {
+        if (userRegistrationDto.getEmail() == null || userRegistrationDto.getEmail().isEmpty()) {
             throw new ValidationException(ExceptionCodes.EMPTY_EMAIL);
         }
-        if (!userEntity.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+        if (!userRegistrationDto.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
             throw new ValidationException(ExceptionCodes.INVALID_EMAIL);
         }
     }
